@@ -50,18 +50,11 @@ const gallery = document.querySelector('.gallery');
 // console.log(gallery);
 
 const generateGalleryTemplate = product => {
-  return `
-  <li class="gallery-item">
-  <a class="gallery-link" href="large-image.jpg">
-    <img
-      class="gallery-image"
-      src="small-image.jpg"
-      data-source="large-image.jpg"
-      alt="Image description"
-    />
-  </a>
-</li>
-`;
+  return `<li class="gallery-item">
+            <a class="gallery-link" href="${product.original}">
+              <img class="gallery-image" src="${product.preview}" data-source="${product.original}" alt="${product.description}" />
+            </a>
+          </li>`;
 };
 
 const galleryTemplate = images.map(el => generateGalleryTemplate(el)).join('');
@@ -75,8 +68,28 @@ gallery.addEventListener('click', event => {
   if (event.currentTarget === event.target) {
     return;
   }
+
+  console.log(event.target);
+
+  const img = event.target.closest('.gallery-image');
+  const imgDataset = img.dataset.source;
+  const imgAltText = img.alt;
+  const instance = basicLightbox.create(
+    `
+    <div>
+    <img class="modal-img" src="${imgDataset}" alt="${imgAltText}">
+    </div>
+    `,
+
+    {
+      closable: true,
+      onShow: () => {
+        console.log('Opened');
+      },
+      onClose: () => {
+        console.log('Closed');
+      },
+    }
+  );
+  instance.show();
 });
-
-console.log(event.target);
-
-const img = event.target.closest('.gallery-image');
