@@ -46,48 +46,37 @@ const images = [
   },
 ];
 
-const galleryContainer = document.querySelector('.gallery');
+const gallery = document.querySelector('.gallery');
+// console.log(gallery);
 
-const galleryMarkup = images
-  .map(
-    ({ preview, original, description }) => `
-    <li class="gallery-item">
-      <a class="gallery-link" href="${original}">
-        <img
-          class="gallery-image"
-          src="${preview}"
-          data-source="${original}"
-          alt="${description}"
-        />
-      </a>
-    </li>
-  `
-  )
-  .join('');
+const generateGalleryTemplate = product => {
+  return `
+  <li class="gallery-item">
+  <a class="gallery-link" href="large-image.jpg">
+    <img
+      class="gallery-image"
+      src="small-image.jpg"
+      data-source="large-image.jpg"
+      alt="Image description"
+    />
+  </a>
+</li>
+`;
+};
 
-galleryContainer.innerHTML = galleryMarkup;
+const galleryTemplate = images.map(el => generateGalleryTemplate(el)).join('');
+// console.log(galleryTemplate);
 
-// Делегування для обробки кліку на зображення
-galleryContainer.addEventListener('click', onGalleryClick);
+gallery.insertAdjacentHTML('beforeend', galleryTemplate);
 
-function onGalleryClick(event) {
+gallery.addEventListener('click', event => {
   event.preventDefault();
 
-  const isImage = event.target.classList.contains('gallery-image');
-  if (!isImage) {
+  if (event.currentTarget === event.target) {
     return;
   }
+});
 
-  const largeImageURL = event.target.dataset.source;
+console.log(event.target);
 
-  openModal(largeImageURL);
-}
-
-// Відкриття модального вікна з зображенням
-function openModal(imageUrl) {
-  const instance = basicLightbox.create(`
-    <img src="${imageUrl}" width="800" height="600">
-  `);
-
-  instance.show();
-}
+const img = event.target.closest('.gallery-image');
