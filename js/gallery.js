@@ -57,7 +57,7 @@ const generateGalleryTemplate = product => {
           </li>`;
 };
 
-const galleryTemplate = images.map(el => generateGalleryTemplate(el)).join('');
+const galleryTemplate = images.map(generateGalleryTemplate).join('');
 // console.log(galleryTemplate);
 
 gallery.insertAdjacentHTML('beforeend', galleryTemplate);
@@ -65,13 +65,13 @@ gallery.insertAdjacentHTML('beforeend', galleryTemplate);
 gallery.addEventListener('click', event => {
   event.preventDefault();
 
-  if (event.currentTarget === event.target) {
+  if (event.target.nodeName !== 'IMG') {
     return;
   }
 
   console.log(event.target);
 
-  const img = event.target.closest('.gallery-image');
+  const img = event.target;
   const imgDataset = img.dataset.source;
   const imgAltText = img.alt;
   const instance = basicLightbox.create(
